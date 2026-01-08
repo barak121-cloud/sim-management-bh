@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="מערכת ניהול סימולטור טיסה - בית הלוחם">
+  <title>סימולטור הטיסה - בית הלוחם</title>
+
+  <!-- Google Fonts - Rubik for Hebrew -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+
+<body>
+  <!-- Toast Notifications Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ========================================
+       Landing Page (Guests)
+       ======================================== -->
+  <div id="page-landing" class="page active">
+    <div class="container">
+      <div class="landing-hero">
+        <h1 class="landing-title">🛫 סימולטור הטיסה</h1>
+        <h2 style="font-size: 1.5rem; color: var(--text-secondary); margin-bottom: 1rem;">בית הלוחם</h2>
+        <p class="landing-subtitle">
+          תוכנית הכשרה ייחודית לנכי צה"ל במסגרת סימולטור טיסה מתקדם.
+          10 שיעורים מקיפים מהיכרות בסיסית ועד טיסת לילה וניווטים מתקדמים.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-lg" onclick="showPage('page-login')">
+            🔐 כניסה למערכת
+          </button>
+        </div>
+
+        <!-- Registration Banner -->
+        <div
+          style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+          <h3 style="margin-bottom: 1rem; text-align: center;">🎯 הצטרף אלינו</h3>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-lg" onclick="showPage('page-signup-trainee')" style="min-width: 180px;">
+              🧑‍🎓 הרשמת חניך
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="showPage('page-signup-instructor')"
+              style="min-width: 180px;">
+              👨‍✈️ הרשמת מדריך
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="landing-features">
+        <div class="card feature-card">
+          <div class="feature-icon">✈️</div>
+          <h3 class="feature-title">סימולטור מתקדם</h3>
+          <p class="feature-description">
+            סימולטור טיסה מקצועי עם תרחישים מגוונים כולל טיסת לילה, נחיתה על מים, וניווטים.
+          </p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">👨‍✈️</div>
+          <h3 class="feature-title">מדריכים מנוסים</h3>
+          <p class="feature-description">
+            צוות מדריכים מקצועי עם ניסיון טיסה אמיתי, מלווה אותך לאורך כל הקורס.
+          </p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon">📈</div>
+          <h3 class="feature-title">10 שיעורי סילבוס</h3>
+          <p class="feature-description">
+            מסלול למידה מובנה מהיכרות בסיסית ועד טיסה עצמאית ומתקדמת.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       Login Page
+       ======================================== -->
+  <div id="page-login" class="page">
+    <div class="container" style="max-width: 450px; padding-top: 3rem;">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">כניסה למערכת</h2>
+          <button class="btn btn-sm btn-secondary" onclick="showPage('page-landing')">← חזרה</button>
+        </div>
+
+        <form id="form-login" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="login-email">אימייל</label>
+            <input type="email" id="login-email" class="form-input" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-password">סיסמה</label>
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            🔐 התחבר
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+          <p style="color: var(--text-muted);">אין לך חשבון?</p>
+          <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="showPage('page-signup-trainee')">
+              הרשמת חניך
+            </button>
+            <button class="btn btn-secondary" onclick="showPage('page-signup-instructor')">
+              הרשמת מדריך
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       Trainee Signup Page
+       ======================================== -->
+  <div id="page-signup-trainee" class="page">
+    <div class="container" style="max-width: 550px; padding-top: 2rem;">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🧑‍🎓 הרשמת חניך</h2>
+          <button class="btn btn-sm btn-secondary" onclick="showPage('page-landing')">← חזרה</button>
+        </div>
+
+        <form id="form-signup-trainee" onsubmit="handleTraineeSignup(event)">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="trainee-firstname">שם פרטי *</label>
+              <input type="text" id="trainee-firstname" class="form-input" placeholder="ישראל" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="trainee-lastname">שם משפחה *</label>
+              <input type="text" id="trainee-lastname" class="form-input" placeholder="ישראלי" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="trainee-age">גיל *</label>
+            <input type="number" id="trainee-age" class="form-input" placeholder="35" min="18" max="120" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="trainee-expectations">ציפיות מהקורס</label>
+            <textarea id="trainee-expectations" class="form-input" rows="3"
+              placeholder="מה אתה מצפה ללמוד בקורס הסימולטור?"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="trainee-email">אימייל *</label>
+            <input type="email" id="trainee-email" class="form-input" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="trainee-password">סיסמה *</label>
+            <input type="password" id="trainee-password" class="form-input" placeholder="לפחות 6 תווים" minlength="6"
+              required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            ✅ הרשם כחניך
+          </button>
+        </form>
+
+        <div
+          style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">מדריך? <a href="#"
+              onclick="showPage('page-signup-instructor'); return false;" style="color: var(--primary);">הרשמה
+              למדריכים</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       Instructor Signup Page
+       ======================================== -->
+  <div id="page-signup-instructor" class="page">
+    <div class="container" style="max-width: 550px; padding-top: 2rem;">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">👨‍✈️ הרשמת מדריך</h2>
+          <button class="btn btn-sm btn-secondary" onclick="showPage('page-landing')">← חזרה</button>
+        </div>
+
+        <form id="form-signup-instructor" onsubmit="handleInstructorSignup(event)">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="instructor-firstname">שם פרטי *</label>
+              <input type="text" id="instructor-firstname" class="form-input" placeholder="ישראל" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="instructor-lastname">שם משפחה *</label>
+              <input type="text" id="instructor-lastname" class="form-input" placeholder="ישראלי" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="instructor-role">סוג מדריך *</label>
+            <select id="instructor-role" class="form-input form-select" required>
+              <option value="">בחר...</option>
+              <option value="instructor_junior">מדריך חדש</option>
+              <option value="instructor_senior">מדריך ותיק</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="instructor-sim-background">רקע בסימולטורים</label>
+            <textarea id="instructor-sim-background" class="form-input" rows="2"
+              placeholder="ספר על הניסיון שלך בסימולטורים..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="instructor-flight-background">רקע בטיסה</label>
+            <textarea id="instructor-flight-background" class="form-input" rows="2"
+              placeholder="ספר על הניסיון שלך בטיסה אמיתית..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="instructor-phone">טלפון נייד *</label>
+            <input type="tel" id="instructor-phone" class="form-input" placeholder="050-1234567" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="instructor-email">אימייל *</label>
+            <input type="email" id="instructor-email" class="form-input" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="instructor-password">סיסמה *</label>
+            <input type="password" id="instructor-password" class="form-input" placeholder="לפחות 6 תווים" minlength="6"
+              required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            ✅ הרשם כמדריך
+          </button>
+        </form>
+
+        <div
+          style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">חניך? <a href="#"
+              onclick="showPage('page-signup-trainee'); return false;" style="color: var(--primary);">הרשמה לחניכים</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       Main App (Logged In) - Navigation
+       ======================================== -->
+  <div id="app-wrapper" style="display: none;">
+    <nav class="navbar">
+      <div class="container navbar-content">
+        <div class="navbar-brand">
+          <span style="font-size: 1.5rem;">🛫</span>
+          <span class="navbar-title">בית הלוחם</span>
+        </div>
+
+        <ul class="navbar-nav">
+          <li>
+            <a href="#" class="nav-link active" data-page="page-dashboard" onclick="showAppPage('page-dashboard')">
+              <span>📊</span>
+              <span>דף הבית</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-page="page-calendar" onclick="showAppPage('page-calendar')">
+              <span>📅</span>
+              <span>לוח שיבוצים</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-page="page-profile" onclick="showAppPage('page-profile')">
+              <span>👤</span>
+              <span>פרופיל</span>
+            </a>
+          </li>
+          <li id="nav-admin" style="display: none;">
+            <a href="#" class="nav-link" data-page="page-admin" onclick="showAppPage('page-admin')">
+              <span>⚙️</span>
+              <span>ניהול</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" onclick="handleLogout()">
+              <span>🚪</span>
+              <span>יציאה</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- ========================================
+         Dashboard Page
+         ======================================== -->
+    <div id="page-dashboard" class="page active">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 5rem;">
+
+        <!-- Notice Board -->
+        <div id="notice-board" class="notice-board">
+          <div class="notice-board-header">
+            <span class="notice-board-icon">📢</span>
+            <h3 class="notice-board-title">לוח הודעות</h3>
+          </div>
+          <div id="notice-list">
+            <!-- Notices will be loaded here -->
+            <div class="notice-item">
+              <div class="notice-date">אין הודעות חדשות</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Welcome Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <h2>שלום, <span id="user-name-display">משתמש</span>! 👋</h2>
+          <p id="user-role-display">ברוך הבא למערכת ניהול הסימולטור</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="dashboard-stats">
+          <!-- Stats loaded dynamically based on role -->
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <h3 style="margin-bottom: 1rem;">פעולות מהירות</h3>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-lg" onclick="showAppPage('page-calendar')">
+              📅 הרשמה לשיעור
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="showAppPage('page-profile')">
+              👤 עדכון פרופיל
+            </button>
+          </div>
+        </div>
+
+        <!-- Syllabus Progress (Trainees) -->
+        <div id="syllabus-progress-section" class="card" style="margin-top: 1.5rem; display: none;">
+          <h3 style="margin-bottom: 1rem;">התקדמות בסילבוס</h3>
+          <div class="progress-container">
+            <div class="progress-label">
+              <span id="current-lesson-name">שיעור 1: היכרות עם הסימולטור והטסה בסיסית</span>
+              <span id="progress-percent">10%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill" style="width: 10%;"></div>
+            </div>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            השיעור הבא שלך: <strong id="next-lesson-display">שיעור 1</strong>
+          </p>
+        </div>
+
+        <!-- Upcoming Lessons (Instructors) -->
+        <div id="upcoming-lessons-section" class="card" style="margin-top: 1.5rem; display: none;">
+          <h3 style="margin-bottom: 1rem;">השיעורים הקרובים שלי</h3>
+          <div id="upcoming-lessons-list">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================
+         Calendar Page
+         ======================================== -->
+    <div id="page-calendar" class="page">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 5rem;">
+        <div class="calendar">
+          <div class="calendar-header">
+            <button class="btn btn-secondary btn-icon" onclick="changeMonth(-1)">→</button>
+            <h2 class="calendar-title" id="calendar-month-title">ינואר 2026</h2>
+            <button class="btn btn-secondary btn-icon" onclick="changeMonth(1)">←</button>
+          </div>
+
+          <!-- Legend -->
+          <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; font-size: 0.85rem;">
+            <span><span
+                style="display: inline-block; width: 12px; height: 12px; background: var(--status-full); border-radius: 3px;"></span>
+              מאויש מלא</span>
+            <span><span
+                style="display: inline-block; width: 12px; height: 12px; background: var(--status-partial); border-radius: 3px;"></span>
+              חסר מתאמן</span>
+            <span><span
+                style="display: inline-block; width: 12px; height: 12px; background: var(--status-empty); border-radius: 3px;"></span>
+              חסר מדריך</span>
+            <span><span
+                style="display: inline-block; width: 12px; height: 12px; background: var(--status-independent); border-radius: 3px;"></span>
+              אימון עצמאי</span>
+          </div>
+
+          <div class="calendar-grid">
+            <div class="calendar-day-header">ראשון</div>
+            <div class="calendar-day-header">שני</div>
+            <div class="calendar-day-header">שלישי</div>
+            <div class="calendar-day-header">רביעי</div>
+            <div class="calendar-day-header">חמישי</div>
+            <div class="calendar-day-header">שישי</div>
+            <div class="calendar-day-header">שבת</div>
+          </div>
+
+          <div class="calendar-grid" id="calendar-days">
+            <!-- Days will be rendered here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================
+         Profile Page
+         ======================================== -->
+    <div id="page-profile" class="page">
+      <div class="container" style="max-width: 600px; padding-top: 2rem; padding-bottom: 5rem;">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">הפרופיל שלי</h2>
+          </div>
+
+          <div class="profile-card" style="margin-bottom: 1.5rem;">
+            <div class="profile-avatar" id="profile-avatar">א</div>
+            <div class="profile-info">
+              <div class="profile-name" id="profile-name">שם משתמש</div>
+              <div class="profile-role" id="profile-role">תפקיד</div>
+            </div>
+          </div>
+
+          <form id="form-profile" onsubmit="handleProfileUpdate(event)">
+            <div class="form-group">
+              <label class="form-label">שם מלא</label>
+              <input type="text" id="profile-input-name" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">אימייל</label>
+              <input type="email" id="profile-input-email" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">טלפון</label>
+              <input type="tel" id="profile-input-phone" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">רקע טיסה/סימולטור</label>
+              <textarea id="profile-input-background" class="form-input"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+              💾 שמור שינויים
+            </button>
+          </form>
+        </div>
+
+        <!-- Instructor Notes (for next instructor) -->
+        <div id="lesson-notes-section" class="card" style="margin-top: 1.5rem; display: none;">
+          <h3 style="margin-bottom: 1rem;">הערות לשיעור הבא</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+            הערות אלו יוצגו למדריך הבא של המתאמן
+          </p>
+          <textarea id="lesson-notes-input" class="form-input" placeholder="הערות מקצועיות לשיעור הבא..."></textarea>
+          <button class="btn btn-secondary" style="margin-top: 1rem;" onclick="saveLessonNotes()">
+            שמור הערות
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================
+         Admin Page
+         ======================================== -->
+    <div id="page-admin" class="page">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 5rem;">
+        <h2 style="margin-bottom: 1.5rem;">ניהול המערכת ⚙️</h2>
+
+        <!-- Admin Tabs -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="showAdminTab('tab-notices')">📢 לוח הודעות</button>
+          <button class="btn btn-secondary" onclick="showAdminTab('tab-users')">👥 משתמשים</button>
+          <button class="btn btn-secondary" onclick="showAdminTab('tab-schedule')">📅 ניהול לו"ז</button>
+          <button class="btn btn-secondary" onclick="showAdminTab('tab-instructors')">👨‍✈️ מדריכים</button>
+          <button class="btn btn-secondary" onclick="showAdminTab('tab-logs')">📋 לוג ביטולים</button>
+          <button class="btn btn-secondary" onclick="exportToExcel()">📊 ייצוא אקסל</button>
+        </div>
+
+        <!-- Notice Board Admin Tab -->
+        <div id="tab-notices" class="admin-tab">
+          <div class="card">
+            <h3 style="margin-bottom: 1rem;">פרסום הודעה חדשה</h3>
+            <form onsubmit="postNotice(event)">
+              <div class="form-group">
+                <label class="form-label">תוכן ההודעה</label>
+                <textarea id="notice-content" class="form-input"
+                  placeholder="למשל: הסימולטור יהיה מושבת לתחזוקה ביום ג'" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">📢 פרסם הודעה</button>
+            </form>
+          </div>
+
+          <div class="card" style="margin-top: 1.5rem;">
+            <h3 style="margin-bottom: 1rem;">הודעות קיימות</h3>
+            <div id="admin-notice-list">
+              <!-- Notices with delete option -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Management Tab -->
+        <div id="tab-users" class="admin-tab" style="display: none;">
+          <div class="card">
+            <h3 style="margin-bottom: 1rem;">ניהול משתמשים</h3>
+
+            <!-- Fast Track Registration -->
+            <div
+              style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem;">
+              <h4 style="margin-bottom: 0.5rem;">⚡ רישום מהיר (Fast Track)</h4>
+              <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+                רישום מתאמן לשיעור ללא צורך בסיסמה שלו
+              </p>
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <select id="fast-track-user" class="form-input" style="flex: 1; min-width: 200px;">
+                  <option value="">בחר מתאמן...</option>
+                </select>
+                <select id="fast-track-slot" class="form-input" style="flex: 1; min-width: 200px;">
+                  <option value="">בחר משבצת...</option>
+                </select>
+                <button class="btn btn-primary" onclick="fastTrackRegister()">רשום</button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="table" id="users-table">
+                <thead>
+                  <tr>
+                    <th>שם</th>
+                    <th>תפקיד</th>
+                    <th>סטטוס</th>
+                    <th>פסילות</th>
+                    <th>פעולות</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body">
+                  <!-- Users loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule Management Tab -->
+        <div id="tab-schedule" class="admin-tab" style="display: none;">
+          <div class="card">
+            <h3 style="margin-bottom: 1rem;">יצירת יום אימון</h3>
+            <form onsubmit="createTrainingDay(event)">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">תאריך</label>
+                  <input type="date" id="training-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">סוג יום</label>
+                  <select id="training-day-type" class="form-input form-select" required>
+                    <option value="regular">יום רגיל (2 מדריכים)</option>
+                    <option value="instructor_training">הכשרת מדריכים (10+2)</option>
+                    <option value="independent">אימון עצמאי (סולו/בוגר)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">חזרה</label>
+                  <select id="training-recurring" class="form-input form-select">
+                    <option value="none">חד פעמי</option>
+                    <option value="weekly">שבועי</option>
+                    <option value="biweekly">דו-שבועי</option>
+                  </select>
+                </div>
+              </div>
+
+              <h4 style="margin: 1rem 0;">משבצות זמן</h4>
+              <div id="time-slots-container">
+                <div class="time-slot-row" style="display: flex; gap: 1rem; margin-bottom: 0.5rem;">
+                  <input type="time" class="form-input slot-time" value="09:00" style="flex: 1;">
+                  <input type="time" class="form-input slot-time" value="10:30" style="flex: 1;">
+                </div>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="addTimeSlot()">+ הוסף משבצת</button>
+
+              <div style="margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary btn-lg">📅 צור יום אימון</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Instructors Statistics Tab -->
+        <div id="tab-instructors" class="admin-tab" style="display: none;">
+          <div class="card">
+            <h3 style="margin-bottom: 1rem;">סטטיסטיקת מדריכים</h3>
+
+            <!-- Inactive Alert -->
+            <div id="inactive-instructors-alert" style="display: none;" class="notice-board">
+              <div class="notice-board-header">
+                <span class="notice-board-icon">⚠️</span>
+                <h4 class="notice-board-title">מדריכים לא פעילים (14+ ימים)</h4>
+              </div>
+              <div id="inactive-instructors-list"></div>
+            </div>
+
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>מדריך</th>
+                    <th>סוג</th>
+                    <th>סה"כ שעות</th>
+                    <th>פעילות אחרונה</th>
+                    <th>פירוט</th>
+                  </tr>
+                </thead>
+                <tbody id="instructors-stats-body">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logs Tab -->
+        <div id="tab-logs" class="admin-tab" style="display: none;">
+          <div class="card">
+            <h3 style="margin-bottom: 1rem;">לוג ביטולים</h3>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>תאריך</th>
+                    <th>משתמש</th>
+                    <th>פעולה</th>
+                    <th>פרטים</th>
+                  </tr>
+                </thead>
+                <tbody id="logs-table-body">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- End app-wrapper -->
+
+  <!-- ========================================
+       Modal: Join Request (Guests)
+       ======================================== -->
+  <div id="modal-join-request" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">בקשת הצטרפות</h3>
+        <button class="modal-close" onclick="closeModal('modal-join-request')">&times;</button>
+      </div>
+      <form onsubmit="submitJoinRequest(event)">
+        <div class="form-group">
+          <label class="form-label">שם מלא *</label>
+          <input type="text" id="join-name" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">אימייל *</label>
+          <input type="email" id="join-email" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">טלפון *</label>
+          <input type="tel" id="join-phone" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">הודעה</label>
+          <textarea id="join-message" class="form-input" placeholder="ספר קצת על עצמך..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+          ✉️ שלח בקשה
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================
+       Modal: Slot Details
+       ======================================== -->
+  <div id="modal-slot" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="slot-modal-title">פרטי משבצת</h3>
+        <button class="modal-close" onclick="closeModal('modal-slot')">&times;</button>
+      </div>
+      <div id="slot-modal-content">
+        <!-- Slot details loaded dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       Modal: Instructor Stats Detail
+       ======================================== -->
+  <div id="modal-instructor-stats" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="instructor-stats-title">פירוט שעות</h3>
+        <button class="modal-close" onclick="closeModal('modal-instructor-stats')">&times;</button>
+      </div>
+      <div id="instructor-stats-content">
+        <!-- Stats breakdown loaded dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       Modal: Remove No-Show (Admin Exception)
+       ======================================== -->
+  <div id="modal-remove-noshow" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">הסרת פסילה</h3>
+        <button class="modal-close" onclick="closeModal('modal-remove-noshow')">&times;</button>
+      </div>
+      <form onsubmit="removeNoShow(event)">
+        <input type="hidden" id="noshow-user-id">
+        <div class="form-group">
+          <label class="form-label">סיבה להסרת הפסילה *</label>
+          <select id="noshow-reason" class="form-input form-select" required>
+            <option value="">בחר סיבה...</option>
+            <option value="reserves">מילואים</option>
+            <option value="medical">מצב רפואי</option>
+            <option value="other">אחר</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">הערות נוספות</label>
+          <textarea id="noshow-notes" class="form-input"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+          ✅ הסר פסילה
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Supabase Configuration -->
+  <script>
+    // Supabase credentials - configured for production
+    window.ENV = {
+      SUPABASE_URL: 'https://rnwrmqfpejqhnfoqvtzr.supabase.co',
+      SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJud3JtcWZwZWpxaG5mb3F2dHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4MTMzNDgsImV4cCI6MjA4MzM4OTM0OH0.IdHQ5nmwT-cbU24EchlfybhNh_79hYvzHe7W9etjBIE'
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- JavaScript Modules -->
+  <script src="js/syllabus.js" type="module"></script>
+  <script src="js/supabase.js" type="module"></script>
+  <script src="js/data.js" type="module"></script>
+  <script src="js/auth.js" type="module"></script>
+  <script src="js/components.js" type="module"></script>
+  <script src="js/calendar.js" type="module"></script>
+  <script src="js/attendance.js" type="module"></script>
+  <script src="js/dashboard.js" type="module"></script>
+  <script src="js/analytics.js" type="module"></script>
+  <script src="app.js" type="module"></script>
+</body>
+
+</html>
