@@ -2,16 +2,16 @@
 // Role-specific dashboard rendering
 
 import {
-    getUsers,
-    getSchedule,
-    getNotices,
-    getCurrentUser,
-    getUserById,
-    getRoleName,
-    getStatusName,
-    isInstructor,
-    isAdmin,
-    isStaff
+  getUsers,
+  getSchedule,
+  getNotices,
+  getCurrentUser,
+  getUserById,
+  getRoleName,
+  getStatusName,
+  isInstructor,
+  isAdmin,
+  isStaff
 } from './data.js';
 import { showToast, formatDateTime } from './components.js';
 import { getLessonName, SYLLABUS } from './syllabus.js';
@@ -21,32 +21,32 @@ import { getLessonName, SYLLABUS } from './syllabus.js';
 // ========================================
 
 async function initDashboard() {
-    const user = getCurrentUser();
-    if (!user) return;
+  const user = getCurrentUser();
+  if (!user) return;
 
-    // Update user display
-    document.getElementById('user-name-display').textContent = user.name;
-    document.getElementById('user-role-display').textContent = getRoleName(user.role);
+  // Update user display
+  document.getElementById('user-name-display').textContent = user.name;
+  document.getElementById('user-role-display').textContent = getRoleName(user.role);
 
-    // Load notices for all users
-    await loadNotices();
+  // Load notices for all users
+  await loadNotices();
 
-    // Load role-specific content
-    if (isAdmin(user.role)) {
-        await loadAdminDashboard();
-    } else if (isInstructor(user.role)) {
-        await loadInstructorDashboard();
-    } else if (user.role === 'trainee') {
-        await loadTraineeDashboard();
-    } else if (isStaff(user.role)) {
-        await loadStaffDashboard();
-    }
+  // Load role-specific content
+  if (isAdmin(user.role)) {
+    await loadAdminDashboard();
+  } else if (isInstructor(user.role)) {
+    await loadInstructorDashboard();
+  } else if (user.role === 'trainee') {
+    await loadTraineeDashboard();
+  } else if (isStaff(user.role)) {
+    await loadStaffDashboard();
+  }
 
-    // Show/hide admin nav
-    const adminNav = document.getElementById('nav-admin');
-    if (adminNav) {
-        adminNav.style.display = (isAdmin(user.role) || isStaff(user.role)) ? 'block' : 'none';
-    }
+  // Show/hide admin nav - Only admin can see it (NOT staff, NOT instructors)
+  const adminNav = document.getElementById('nav-admin');
+  if (adminNav) {
+    adminNav.style.display = isAdmin(user.role) ? 'block' : 'none';
+  }
 }
 
 // ========================================
@@ -54,20 +54,20 @@ async function initDashboard() {
 // ========================================
 
 async function loadNotices() {
-    const notices = await getNotices();
-    const container = document.getElementById('notice-list');
-    if (!container) return;
+  const notices = await getNotices();
+  const container = document.getElementById('notice-list');
+  if (!container) return;
 
-    if (notices.length === 0) {
-        container.innerHTML = `
+  if (notices.length === 0) {
+    container.innerHTML = `
       <div class="notice-item">
         <div class="notice-date">אין הודעות חדשות</div>
       </div>
     `;
-        return;
-    }
+    return;
+  }
 
-    container.innerHTML = notices.slice(0, 5).map(notice => `
+  container.innerHTML = notices.slice(0, 5).map(notice => `
     <div class="notice-item">
       <div class="notice-date">${formatDateTime(notice.createdAt)}</div>
       <div class="notice-content">${notice.content}</div>
@@ -80,16 +80,16 @@ async function loadNotices() {
 // ========================================
 
 async function loadAdminDashboard() {
-    const users = await getUsers();
-    const schedule = await getSchedule();
+  const users = await getUsers();
+  const schedule = await getSchedule();
 
-    // Stats
-    const totalTrainees = users.filter(u => u.role === 'trainee').length;
-    const totalInstructors = users.filter(u => isInstructor(u.role)).length;
-    const atRiskTrainees = users.filter(u => u.noShowCount >= 2).length;
-    const upcomingSlots = schedule.filter(s => new Date(s.date) >= new Date()).length;
+  // Stats
+  const totalTrainees = users.filter(u => u.role === 'trainee').length;
+  const totalInstructors = users.filter(u => isInstructor(u.role)).length;
+  const atRiskTrainees = users.filter(u => u.noShowCount >= 2).length;
+  const upcomingSlots = schedule.filter(s => new Date(s.date) >= new Date()).length;
 
-    document.getElementById('dashboard-stats').innerHTML = `
+  document.getElementById('dashboard-stats').innerHTML = `
     <div class="stat-card">
       <div class="stat-value">${totalTrainees}</div>
       <div class="stat-label">מתאמנים</div>
@@ -108,17 +108,17 @@ async function loadAdminDashboard() {
     </div>
   `;
 
-    // Show at-risk trainees if any
-    if (atRiskTrainees > 0) {
-        const atRiskUsers = users.filter(u => u.noShowCount >= 2);
-        let alertHtml = `
+  // Show at-risk trainees if any
+  if (atRiskTrainees > 0) {
+    const atRiskUsers = users.filter(u => u.noShowCount >= 2);
+    let alertHtml = `
       <div class="card" style="margin-top: 1.5rem; border-color: var(--status-partial);">
         <h3 style="margin-bottom: 1rem;">⚠️ מתאמנים בסיכון (${atRiskTrainees})</h3>
         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
     `;
 
-        for (const u of atRiskUsers) {
-            alertHtml += `
+    for (const u of atRiskUsers) {
+      alertHtml += `
         <div class="profile-card" style="padding: 0.75rem;">
           <div class="profile-avatar" style="width: 40px; height: 40px; font-size: 1rem; background: ${u.noShowCount >= 3 ? 'var(--status-empty)' : 'var(--status-partial)'};">
             ${u.name.charAt(0)}
@@ -132,11 +132,11 @@ async function loadAdminDashboard() {
           ${u.noShowCount > 0 ? `<button class="btn btn-sm btn-secondary" onclick="openRemoveNoShowModal('${u.id}')">הסר פסילה</button>` : ''}
         </div>
       `;
-        }
-
-        alertHtml += '</div></div>';
-        document.getElementById('dashboard-stats').insertAdjacentHTML('afterend', alertHtml);
     }
+
+    alertHtml += '</div></div>';
+    document.getElementById('dashboard-stats').insertAdjacentHTML('afterend', alertHtml);
+  }
 }
 
 // ========================================
@@ -144,21 +144,21 @@ async function loadAdminDashboard() {
 // ========================================
 
 async function loadInstructorDashboard() {
-    const user = getCurrentUser();
-    const schedule = await getSchedule();
+  const user = getCurrentUser();
+  const schedule = await getSchedule();
 
-    // Get upcoming lessons for this instructor
-    const today = new Date().toISOString().split('T')[0];
-    const myLessons = schedule.filter(s =>
-        (s.leadInstructorId === user.id || s.secondInstructorId === user.id) &&
-        s.date >= today
-    ).sort((a, b) => a.date.localeCompare(b.date) || a.timeStart.localeCompare(b.timeStart));
+  // Get upcoming lessons for this instructor
+  const today = new Date().toISOString().split('T')[0];
+  const myLessons = schedule.filter(s =>
+    (s.leadInstructorId === user.id || s.secondInstructorId === user.id) &&
+    s.date >= today
+  ).sort((a, b) => a.date.localeCompare(b.date) || a.timeStart.localeCompare(b.timeStart));
 
-    // Stats
-    const totalHours = user.totalHours || 0;
-    const upcomingCount = myLessons.length;
+  // Stats
+  const totalHours = user.totalHours || 0;
+  const upcomingCount = myLessons.length;
 
-    document.getElementById('dashboard-stats').innerHTML = `
+  document.getElementById('dashboard-stats').innerHTML = `
     <div class="stat-card">
       <div class="stat-value">${totalHours}</div>
       <div class="stat-label">שעות הדרכה</div>
@@ -169,42 +169,62 @@ async function loadInstructorDashboard() {
     </div>
   `;
 
-    // Show upcoming lessons
-    const upcomingSection = document.getElementById('upcoming-lessons-section');
-    if (upcomingSection) {
-        upcomingSection.style.display = 'block';
-        const list = document.getElementById('upcoming-lessons-list');
+  // Day type labels in Hebrew
+  const dayTypeLabels = {
+    'regular': 'יום הדרכה',
+    'instructor_training': 'יום הדרכת מדריכים',
+    'independent': 'אימון אישי'
+  };
 
-        if (myLessons.length === 0) {
-            list.innerHTML = '<p style="color: var(--text-muted);">אין שיעורים קרובים. היכנס ללוח השיבוצים להרשמה.</p>';
-        } else {
-            let html = '';
-            for (const lesson of myLessons.slice(0, 5)) {
-                const trainee = lesson.traineeId ? await getUserById(lesson.traineeId) : null;
-                const isLead = lesson.leadInstructorId === user.id;
+  // Show upcoming lessons grouped by type
+  const upcomingSection = document.getElementById('upcoming-lessons-section');
+  if (upcomingSection) {
+    upcomingSection.style.display = 'block';
+    const list = document.getElementById('upcoming-lessons-list');
 
-                html += `
-          <div class="profile-card" style="padding: 0.75rem; margin-bottom: 0.5rem;">
-            <div style="flex: 1;">
-              <div style="font-weight: 600;">${new Date(lesson.date).toLocaleDateString('he-IL')} ${lesson.timeStart}</div>
-              <div style="font-size: 0.85rem; color: var(--text-secondary);">
-                ${isLead ? '<span class="lead-badge">מוביל</span>' : 'מדריך משני'}
-                ${trainee ? ` | 🧑‍🎓 ${trainee.name} - ${getLessonName(lesson.lessonNumber || 1)}` : ' | ללא מתאמן'}
+    if (myLessons.length === 0) {
+      list.innerHTML = '<p style="color: var(--text-muted);">אין שיעורים קרובים. היכנס ללוח השיבוצים להרשמה.</p>';
+    } else {
+      let html = '';
+
+      // Group lessons by day type
+      const groupedLessons = {};
+      for (const lesson of myLessons.slice(0, 10)) {
+        const type = lesson.dayType || 'regular';
+        if (!groupedLessons[type]) groupedLessons[type] = [];
+        groupedLessons[type].push(lesson);
+      }
+
+      for (const [type, lessons] of Object.entries(groupedLessons)) {
+        html += `<h4 style="margin: 1rem 0 0.5rem; color: var(--accent-primary);">${dayTypeLabels[type] || type}</h4>`;
+
+        for (const lesson of lessons) {
+          const trainee = lesson.traineeId ? await getUserById(lesson.traineeId) : null;
+          const isLead = lesson.leadInstructorId === user.id;
+
+          html += `
+            <div class="profile-card" style="padding: 0.75rem; margin-bottom: 0.5rem;">
+              <div style="flex: 1;">
+                <div style="font-weight: 600;">${new Date(lesson.date).toLocaleDateString('he-IL')} ${lesson.timeStart}</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                  ${isLead ? '<span class="lead-badge">מוביל</span>' : 'מדריך משני'}
+                  ${trainee ? ` | 🧑‍🎓 ${trainee.name} - ${getLessonName(lesson.lessonNumber || 1)}` : ' | ללא מתאמן'}
+                </div>
+                ${lesson.notes ? `<div style="font-size: 0.8rem; font-style: italic; margin-top: 0.25rem;">💬 ${lesson.notes}</div>` : ''}
               </div>
-              ${lesson.notes ? `<div style="font-size: 0.8rem; font-style: italic; margin-top: 0.25rem;">💬 ${lesson.notes}</div>` : ''}
             </div>
-          </div>
-        `;
-            }
-            list.innerHTML = html;
+          `;
         }
+      }
+      list.innerHTML = html;
     }
+  }
 
-    // Show lesson notes section for instructors
-    const notesSection = document.getElementById('lesson-notes-section');
-    if (notesSection) {
-        notesSection.style.display = 'block';
-    }
+  // Show lesson notes section for instructors
+  const notesSection = document.getElementById('lesson-notes-section');
+  if (notesSection) {
+    notesSection.style.display = 'block';
+  }
 }
 
 // ========================================
@@ -212,11 +232,11 @@ async function loadInstructorDashboard() {
 // ========================================
 
 async function loadTraineeDashboard() {
-    const user = getCurrentUser();
-    const currentLesson = user.currentLesson || 1;
+  const user = getCurrentUser();
+  const currentLesson = user.currentLesson || 1;
 
-    // Stats
-    document.getElementById('dashboard-stats').innerHTML = `
+  // Stats
+  document.getElementById('dashboard-stats').innerHTML = `
     <div class="stat-card">
       <div class="stat-value">${currentLesson}/10</div>
       <div class="stat-label">שיעורים הושלמו</div>
@@ -227,21 +247,21 @@ async function loadTraineeDashboard() {
     </div>
   `;
 
-    // Show progress section
-    const progressSection = document.getElementById('syllabus-progress-section');
-    if (progressSection) {
-        progressSection.style.display = 'block';
+  // Show progress section
+  const progressSection = document.getElementById('syllabus-progress-section');
+  if (progressSection) {
+    progressSection.style.display = 'block';
 
-        const percent = ((currentLesson - 1) / 10) * 100;
-        document.getElementById('progress-fill').style.width = `${percent}%`;
-        document.getElementById('progress-percent').textContent = `${Math.round(percent)}%`;
-        document.getElementById('current-lesson-name').textContent = getLessonName(currentLesson);
-        document.getElementById('next-lesson-display').textContent = getLessonName(currentLesson);
-    }
+    const percent = ((currentLesson - 1) / 10) * 100;
+    document.getElementById('progress-fill').style.width = `${percent}%`;
+    document.getElementById('progress-percent').textContent = `${Math.round(percent)}%`;
+    document.getElementById('current-lesson-name').textContent = getLessonName(currentLesson);
+    document.getElementById('next-lesson-display').textContent = getLessonName(currentLesson);
+  }
 
-    // Show no-show warning if applicable
-    if (user.noShowCount > 0) {
-        const warningHtml = `
+  // Show no-show warning if applicable
+  if (user.noShowCount > 0) {
+    const warningHtml = `
       <div class="card" style="margin-top: 1.5rem; border-color: var(--status-partial);">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
           <span style="font-size: 1.5rem;">⚠️</span>
@@ -252,8 +272,8 @@ async function loadTraineeDashboard() {
         </div>
       </div>
     `;
-        document.getElementById('syllabus-progress-section').insertAdjacentHTML('afterend', warningHtml);
-    }
+    document.getElementById('syllabus-progress-section').insertAdjacentHTML('afterend', warningHtml);
+  }
 }
 
 // ========================================
@@ -261,12 +281,12 @@ async function loadTraineeDashboard() {
 // ========================================
 
 async function loadStaffDashboard() {
-    const users = await getUsers();
+  const users = await getUsers();
 
-    const totalTrainees = users.filter(u => u.role === 'trainee').length;
-    const activeTrainees = users.filter(u => u.role === 'trainee' && u.status !== 'frozen').length;
+  const totalTrainees = users.filter(u => u.role === 'trainee').length;
+  const activeTrainees = users.filter(u => u.role === 'trainee' && u.status !== 'frozen').length;
 
-    document.getElementById('dashboard-stats').innerHTML = `
+  document.getElementById('dashboard-stats').innerHTML = `
     <div class="stat-card">
       <div class="stat-value">${totalTrainees}</div>
       <div class="stat-label">סה"כ מתאמנים</div>
@@ -283,27 +303,66 @@ async function loadStaffDashboard() {
 // ========================================
 
 async function loadProfile() {
-    const user = getCurrentUser();
-    if (!user) return;
+  const user = getCurrentUser();
+  if (!user) return;
 
-    // Update profile display
-    document.getElementById('profile-avatar').textContent = user.name.charAt(0);
-    document.getElementById('profile-name').textContent = user.name;
-    document.getElementById('profile-role').textContent = getRoleName(user.role);
+  // Update profile display
+  document.getElementById('profile-avatar').textContent = user.name.charAt(0);
+  document.getElementById('profile-name').textContent = user.name;
+  document.getElementById('profile-role').textContent = getRoleName(user.role);
 
-    // Fill form
-    document.getElementById('profile-input-name').value = user.name || '';
-    document.getElementById('profile-input-email').value = user.email || '';
-    document.getElementById('profile-input-phone').value = user.phone || '';
-    document.getElementById('profile-input-background').value = user.background || '';
+  // Fill form
+  document.getElementById('profile-input-name').value = user.name || '';
+  document.getElementById('profile-input-email').value = user.email || '';
+  document.getElementById('profile-input-phone').value = user.phone || '';
+  document.getElementById('profile-input-background').value = user.background || '';
+
+  // Show instructor stats if user is an instructor
+  const instructorStatsSection = document.getElementById('profile-instructor-stats');
+  if (instructorStatsSection && isInstructor(user.role)) {
+    instructorStatsSection.style.display = 'block';
+
+    const schedule = await getSchedule();
+    const instructorLessons = schedule.filter(s =>
+      (s.leadInstructorId === user.id || s.secondInstructorId === user.id) &&
+      s.completed
+    );
+
+    const leadCount = schedule.filter(s => s.leadInstructorId === user.id && s.completed).length;
+    const secondCount = schedule.filter(s => s.secondInstructorId === user.id && s.completed).length;
+
+    instructorStatsSection.innerHTML = `
+      <h3 style="margin-bottom: 1rem;">📊 סטטיסטיקות הדרכה</h3>
+      <div class="stats-grid" style="margin-bottom: 0;">
+        <div class="stat-card" style="padding: 1rem;">
+          <div class="stat-value" style="font-size: 2rem;">${user.totalHours || 0}</div>
+          <div class="stat-label">שעות הדרכה</div>
+        </div>
+        <div class="stat-card" style="padding: 1rem;">
+          <div class="stat-value" style="font-size: 2rem;">${instructorLessons.length}</div>
+          <div class="stat-label">שיעורים הושלמו</div>
+        </div>
+        <div class="stat-card" style="padding: 1rem;">
+          <div class="stat-value" style="font-size: 2rem;">${leadCount}</div>
+          <div class="stat-label">כמדריך מוביל</div>
+        </div>
+        <div class="stat-card" style="padding: 1rem;">
+          <div class="stat-value" style="font-size: 2rem;">${secondCount}</div>
+          <div class="stat-label">כמדריך משני</div>
+        </div>
+      </div>
+    `;
+  } else if (instructorStatsSection) {
+    instructorStatsSection.style.display = 'none';
+  }
 }
 
 export {
-    initDashboard,
-    loadNotices,
-    loadProfile,
-    loadAdminDashboard,
-    loadInstructorDashboard,
-    loadTraineeDashboard,
-    loadStaffDashboard
+  initDashboard,
+  loadNotices,
+  loadProfile,
+  loadAdminDashboard,
+  loadInstructorDashboard,
+  loadTraineeDashboard,
+  loadStaffDashboard
 };

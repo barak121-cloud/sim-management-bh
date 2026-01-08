@@ -39,6 +39,16 @@ async function initApp() {
         const appWrapper = document.getElementById('app-wrapper');
         if (appWrapper) appWrapper.style.display = 'block';
 
+        // Show/Hide Admin tab based on role (ONLY admin can see it)
+        const navAdmin = document.getElementById('nav-admin');
+        if (navAdmin) {
+            if (user.role === 'admin') {
+                navAdmin.style.display = 'block';
+            } else {
+                navAdmin.style.display = 'none';
+            }
+        }
+
         // Initialize dashboard
         await initDashboard();
         // Load calendar

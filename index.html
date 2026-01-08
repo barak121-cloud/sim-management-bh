@@ -29,6 +29,12 @@
   <div id="page-landing" class="page active">
     <div class="container">
       <div class="landing-hero">
+        <!-- Hero Image -->
+        <div style="margin-bottom: 2rem;">
+          <img src="תמונה1.jpg" alt="בית הלוחם - סימולטור טיסה"
+            style="max-width: 400px; width: 100%; height: auto; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+        </div>
+
         <h1 class="landing-title">🛫 סימולטור הטיסה</h1>
         <h2 style="font-size: 1.5rem; color: var(--text-secondary); margin-bottom: 1rem;">בית הלוחם</h2>
         <p class="landing-subtitle">
@@ -265,7 +271,8 @@
     <nav class="navbar">
       <div class="container navbar-content">
         <div class="navbar-brand">
-          <span style="font-size: 1.5rem;">🛫</span>
+          <img src="תמונה1.jpg" alt="בית הלוחם" class="navbar-logo"
+            style="width: 40px; height: 40px; border-radius: var(--radius-md); object-fit: cover;">
           <span class="navbar-title">בית הלוחם</span>
         </div>
 
@@ -462,6 +469,11 @@
           </form>
         </div>
 
+        <!-- Instructor Stats (visible only to instructors) -->
+        <div id="profile-instructor-stats" class="card" style="margin-top: 1.5rem; display: none;">
+          <!-- Content loaded dynamically by dashboard.js -->
+        </div>
+
         <!-- Instructor Notes (for next instructor) -->
         <div id="lesson-notes-section" class="card" style="margin-top: 1.5rem; display: none;">
           <h3 style="margin-bottom: 1rem;">הערות לשיעור הבא</h3>
@@ -545,7 +557,7 @@
                     <th>שם</th>
                     <th>תפקיד</th>
                     <th>סטטוס</th>
-                    <th>פסילות</th>
+                    <th>אי הגעה</th>
                     <th>פעולות</th>
                   </tr>
                 </thead>
