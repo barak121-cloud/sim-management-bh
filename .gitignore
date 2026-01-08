@@ -20,3 +20,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# GitHub sync config (contains token)
+github-config.ps1
